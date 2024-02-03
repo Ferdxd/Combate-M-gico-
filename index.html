@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+    <body>
+        <h1>Combate Magico</h1>
+
+        <section id="menu-principal">
+            <h1>Menu Principal</h1>
+            <Button id="btn_unJugador">Modo Un Jugador</Button>
+            <Button id="btn_multijugador">Modo Multijugador</Button>
+          
+        </section>
+
+        <section id="seleccionar-personaje">  
+            <h1>Seleccionar Personaje</h1>
+            
+            <input type="radio" id="harry" name="personaje"/>
+            <label class="tarjeta-personaje" for="harry">
+            <p>Harry Potter</p>
+            <img src="./assets/harry_potter.png" alt="harry" height="60px" widht="60px"/>
+            </label>
+
+            <input type="radio" id="ron" name="personaje"/>
+            <label class="tarjeta-personaje" for="ron">
+            <img src="./assets/Ron_Weasley.png" alt="ron" height="60px" widht="60px"/>
+            <p>Ron Weasley</p>
+            </label>
+
+            <input type="radio" id="hermione" name="personaje"/>
+            <label class="tarjeta-personaje" for="hermione">
+            <img src="./assets/Hermione_Granger.png" alt="hermione" height="60px" widht="60px"/>
+            <p>Hermione Granger</p>
+            <button id="btn_personaje">Seleccionar</button>
+            </label>
+    
+
+        </section>
+
+        <section id="mapa">
+            <h1>Mapa</h1>
+            <p>mapa para pelear con personajes aleatorios</p>
+            <img src="./assets/mapa.jpg" alt="mapa" height="80px" width="80px"/>
+        </section>
+
+        <section id="modo-combate">
+            <h1>Combate</h1>
+            <h1>hechizos de ataque</h1>
+            <p>Expelliarmus, Stupefy, Reducto</p>
+            <h1>Tipos de Defensa</h1>
+            <p>Protego, Escudo Magico</p>
+        </section>
+
+
+   
+        <script src="./js/combate-magico.js" async defer></script>
+    </body>
+</html>
