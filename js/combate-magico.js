@@ -10,6 +10,8 @@ const rbtn_ron=document.getElementById('ron')
 
 const personaje_Seleccionado=document.getElementById('btn_personaje')
 
+
+
 //funcion principal
 function main(){
     btn_1jugador.addEventListener('click', modo_unJugador)
@@ -39,7 +41,7 @@ function seleccionPersonaje(){
         return
     }
 
-    alert("El persnaje que seleccionaste es: "+nombre_personaje)
+    alert("El personaje que seleccionaste es: "+nombre_personaje)
 
 }
 
