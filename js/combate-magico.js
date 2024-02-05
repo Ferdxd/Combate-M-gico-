@@ -71,7 +71,7 @@ function personajesSeleccionables(){
     personajes.forEach((personaje)=>{
         opcionPersonajes=`<input type="radio" id=${personaje.id} name="personaje"/>
         <label class="tarjeta-personaje" for=${personaje.id}>
-        <img src=${personaje.foto} alt=${personaje.id} height="60px" widht="60px"/>
+        <img src=${personaje.foto} alt=${personaje.id} />
         <p>${personaje.nombre}</p>
         </label>`
         divContenedorPersonajes.innerHTML+=opcionPersonajes

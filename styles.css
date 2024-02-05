@@ -1,0 +1,78 @@
+body{
+    background-color: #86A789;
+}
+
+#menu-principal{
+    display:flex;
+    justify-content: center;
+    flex-direction: column;
+
+}
+
+#seleccionar-personaje{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#btn_personaje{
+    width: 180px;
+    height: 40px;
+    border-radius: 20px;
+    background: transparent;
+    border: 3px solid;
+    color: black;
+    margin-top: 30px;
+}
+
+#modo-combate{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+
+}
+
+.tarjeta-personaje{
+    background-color: #D2E3C8;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 200px;
+    height: 125px;
+}
+
+.tarjeta-personaje img{
+    height: 60px;
+}
+
+#contenedorPersonajes input{
+    display:none;
+}
+
+#menu-principal button{
+    background-color: #D2E3C8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 20px;
+    margin: 10px;
+    padding: 10px;
+}
+
+.ataques{
+    display:grid;
+    grid-template-columns: 100px 100px;
+}
+
+.ataques-jugador, .ataques-enemigo{
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+}
