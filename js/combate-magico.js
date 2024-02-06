@@ -17,6 +17,11 @@ let personajeJugador
 let personajeEnemigo
 let vidaEnemigo
 let vidaJugador
+let ataquesJugador=[]
+let defensasJugador=[]
+let ataquesEnemigo=[]
+let defensasEnemigo=[]
+let secuenciaAtaquesJugador=[]
 
 
 //section personajes
@@ -66,11 +71,10 @@ let hermioneGranger=new Personaje('Hermione Granger','./assets/Hermione_Granger.
 // <p>Protego, Escudo Magico</p>
 
 //botones ataques
-let btnExpelliarmus
-let btnStupefy
-let btnReducto
+let btnAtaque1
+let btnAtaque2
+let btnAtaque3
 let botonesAtaques=[]
-let secuenciaAtaquesJugador=[]
 //botones Defensas
 let btnProtego
 let btnEscudoMagico
@@ -180,23 +184,35 @@ function seleccionEnemigo(){
     personajeEnemigo=personajes[personajeElegido]
    console.log(personajeEnemigo.nombre)
    nombreEnemigo.innerHTML= personajeEnemigo.nombre
+   extraerAtaquesEnemigo(personajeEnemigo)
+   
+}
+
+function extraerAtaquesEnemigo(personajeEnemigo){
+    //ataquesEnemigo=structuredClone(personajeEnemigo.ataques)//sirve para clonar directamente el objeto y no solo referenciarlo
+    ataquesEnemigo.push(...personajeEnemigo.ataques)
+    defensasEnemigo.push(...personajeEnemigo.defensas)
+    console.log("ataques enemigo")
+ //   ataquesEnemigo.pop()
+  //  console.log(ataquesEnemigo.splice(0,1))
+    console.log(ataquesEnemigo)
+    
    
 }
 
 
+
 function extraerAtaques(personajeJugador){
-    let ataques=personajeJugador.ataques
-    let defensas=personajeJugador.defensas
+    ataquesJugador=personajeJugador.ataques
+    defensasJugador=personajeJugador.defensas
     
-    console.log(ataques)
-    console.log(defensas)
-    mostrarSkills(ataques,'boton-ataques',divContenedorAtaques)
+    mostrarSkills(ataquesJugador,'boton-ataques',divContenedorAtaques)
         
-    btnExpelliarmus=document.getElementById('Expelliarmus')
-    btnStupefy=document.getElementById('Stupefy')
-    btnReducto=document.getElementById('Reducto')
+    btnAtaque1=document.getElementById(ataquesJugador[0].nombre)
+    btnAtaque2=document.getElementById(ataquesJugador[1].nombre)
+    btnAtaque3=document.getElementById(ataquesJugador[2].nombre)
     botonesAtaques=document.querySelectorAll('.boton-ataques')
-    mostrarSkills(defensas,'boton-defensas',divContenedorDefensas)
+    //mostrarSkills(defensasJugador,'boton-defensas',divContenedorDefensas)
 
     secuenciaCombate()
 
@@ -209,22 +225,35 @@ function extraerAtaques(personajeJugador){
 function secuenciaCombate(){
     botonesAtaques.forEach((boton)=>{
         boton.addEventListener('click',(e)=>{
-            if(e.target.textContent=='Expelliarmus'){
+            ataquesJugador.forEach((ataque)=>{
+                if(e.target.textContent==ataque.nombre){
+                    secuenciaAtaquesJugador.push(ataque.nombre)
+                    lanzarAtaque(ataque.nombre)
+                    lanzarAtaqueEnemigo()
+                    boton.style.background='white'
+                    boton.disabled=true
+                }
+            })
+            if(secuenciaAtaquesJugador.length==3){
+                alert("ya has presionado todos los botones")
+            }
+            /*
+            if(e.target.textContent==ataquesJugador[0].nombre){
                 secuenciaAtaquesJugador.push('Expelliarmus')
                 //console.log(secuenciaAtaquesJugador)
-                lanzarAtaque('Expelliarmus')
+                lanzarAtaque(ataquesJugador[0].nombre)
                 lanzarAtaqueEnemigo()
                 boton.style.background='white'
                 boton.disabled=true
-            }else if(e.target.textContent=='Stupefy'){
+            }else if(e.target.textContent==ataquesJugador[1].nombre){
                 secuenciaAtaquesJugador.push('Stupefy')
-                lanzarAtaque('Stupefy')
+                lanzarAtaque(ataquesJugador[1].nombre)
                 lanzarAtaqueEnemigo()
                 boton.style.background='white'
                 boton.disabled=true
-            }else if(e.target.textContent=='Reducto'){
+            }else if(e.target.textContent==ataquesJugador[2].nombre){
                 secuenciaAtaquesJugador.push('Reducto')
-                lanzarAtaque('Reducto')
+                lanzarAtaque(ataquesJugador[2].nombre)
 
                 lanzarAtaqueEnemigo()
                 boton.style.background='white'
@@ -232,7 +261,7 @@ function secuenciaCombate(){
             }
             if(secuenciaAtaquesJugador.length==3){
                 alert("ya has presionado todos los botones")
-            }
+            }*/
         })
     })
     
@@ -244,6 +273,8 @@ function actualizarVida(){
 }
 
 function lanzarAtaque(nombreAtaque){
+    
+    
     if('Expelliarmus'==nombreAtaque){
         vidaEnemigo-=3
         //alert(personajeJugador.nombre+ "Lanza Hechizo "+" a "+personajeEnemigo.nombre)
@@ -258,20 +289,16 @@ function lanzarAtaque(nombreAtaque){
 
 }
 function lanzarAtaqueEnemigo(){
-    
-    let atack=ataquesTipoDaño[aleatorio(0,ataquesTipoDaño.length-1)].nombre
-    console.log(atack)
-    if('Expelliarmus'==atack){
-        vidaJugador-=3
-        //alert(personajeJugador.nombre+ "Lanza Hechizo "+" a "+personajeEnemigo.nombre)
-        actualizarVida()
-    }else if('Stupefy'==atack){
-        vidaJugador-=2
-        actualizarVida()
+    if(ataquesEnemigo.length!=null){
+        let ataqueAleatorio = aleatorio(0,ataquesEnemigo.length-1)
+        console.log(personajeEnemigo.nombre+" Lanza "+ataquesEnemigo[ataqueAleatorio].nombre+ " contra:"+ personajeJugador.nombre)
+        vidaJugador-=ataquesEnemigo[ataqueAleatorio].damage
+        console.log(ataquesEnemigo.splice(ataqueAleatorio,1))
+        console.log(ataquesEnemigo)
     }else{
-        vidaJugador-=4
-        actualizarVida()
+        console.log("Ya no hay mas ataques enemigos")
     }
+    
 }
 
 
