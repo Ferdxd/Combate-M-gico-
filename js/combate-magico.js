@@ -228,7 +228,7 @@ function secuenciaCombate(){
             ataquesJugador.forEach((ataque)=>{
                 if(e.target.textContent==ataque.nombre){
                     secuenciaAtaquesJugador.push(ataque.nombre)
-                    lanzarAtaque(ataque.nombre)
+                    lanzarAtaque(ataque)
                     lanzarAtaqueEnemigo()
                     boton.style.background='white'
                     boton.disabled=true
@@ -237,31 +237,6 @@ function secuenciaCombate(){
             if(secuenciaAtaquesJugador.length==3){
                 alert("ya has presionado todos los botones")
             }
-            /*
-            if(e.target.textContent==ataquesJugador[0].nombre){
-                secuenciaAtaquesJugador.push('Expelliarmus')
-                //console.log(secuenciaAtaquesJugador)
-                lanzarAtaque(ataquesJugador[0].nombre)
-                lanzarAtaqueEnemigo()
-                boton.style.background='white'
-                boton.disabled=true
-            }else if(e.target.textContent==ataquesJugador[1].nombre){
-                secuenciaAtaquesJugador.push('Stupefy')
-                lanzarAtaque(ataquesJugador[1].nombre)
-                lanzarAtaqueEnemigo()
-                boton.style.background='white'
-                boton.disabled=true
-            }else if(e.target.textContent==ataquesJugador[2].nombre){
-                secuenciaAtaquesJugador.push('Reducto')
-                lanzarAtaque(ataquesJugador[2].nombre)
-
-                lanzarAtaqueEnemigo()
-                boton.style.background='white'
-                boton.disabled=true
-            }
-            if(secuenciaAtaquesJugador.length==3){
-                alert("ya has presionado todos los botones")
-            }*/
         })
     })
     
@@ -272,29 +247,21 @@ function actualizarVida(){
     vidasJugador.innerHTML="vida "+vidaJugador
 }
 
-function lanzarAtaque(nombreAtaque){
-    
-    
-    if('Expelliarmus'==nombreAtaque){
-        vidaEnemigo-=3
-        //alert(personajeJugador.nombre+ "Lanza Hechizo "+" a "+personajeEnemigo.nombre)
-        actualizarVida()
-    }else if('Stupefy'==nombreAtaque){
-        vidaEnemigo-=2
-        actualizarVida()
-    }else{
-        vidaEnemigo-=4
-        actualizarVida()
-    }
-
+function lanzarAtaque(ataqueLanzado){
+    console.log(personajeJugador.nombre+ " Lanza "+ataqueLanzado.nombre+" contra:"+personajeEnemigo.nombre+" e inflige "+ataqueLanzado.damage+ " de daño")
+    vidaEnemigo-=ataqueLanzado.damage
+    console.log("vida "+vidaEnemigo)
+    actualizarVida()
 }
 function lanzarAtaqueEnemigo(){
     if(ataquesEnemigo.length!=null){
         let ataqueAleatorio = aleatorio(0,ataquesEnemigo.length-1)
-        console.log(personajeEnemigo.nombre+" Lanza "+ataquesEnemigo[ataqueAleatorio].nombre+ " contra:"+ personajeJugador.nombre)
+        console.log(personajeEnemigo.nombre+" Lanza "+ataquesEnemigo[ataqueAleatorio].nombre+ " contra:"+ personajeJugador.nombre+" e inflige "+ataquesEnemigo[ataqueAleatorio].damage+ " de daño")
         vidaJugador-=ataquesEnemigo[ataqueAleatorio].damage
+        actualizarVida()
         console.log(ataquesEnemigo.splice(ataqueAleatorio,1))
         console.log(ataquesEnemigo)
+        console.log("vida "+vidaJugador)
     }else{
         console.log("Ya no hay mas ataques enemigos")
     }
