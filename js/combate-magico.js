@@ -1,9 +1,14 @@
+//sectionMapa
+const sectionMapa = document.getElementById('mapa')
+
 //secciones de modalidad de juegos
+const sectionMenuPrincipal=document.getElementById('menu-principal')
 const btn_1jugador=document.getElementById('btn_unJugador')
 const btn_multijugador=document.getElementById('btn_multijugador')
 
 
 //personajes jugables
+const sectionSeleccionPersonaje=document.getElementById('seleccionar-personaje')
 let rbtn_hermione
 let rbtn_harry
 let rbtn_ron
@@ -22,7 +27,7 @@ const personaje_Seleccionado=document.getElementById('btn_personaje')
 
 
 //section modo-combate
-
+const sectionCombate=document.getElementById('modo-combate')
 const vidasJugador=document.getElementById('vidas-jugador')
 const nombreJugador=document.getElementById('nombre-jugador')
 
@@ -109,8 +114,11 @@ function personajesSeleccionables(){
 
 //funcion principal
 function main(){
+    sectionMenuPrincipal.style.display="none"
     btn_1jugador.addEventListener('click', modo_unJugador)
     btn_multijugador.addEventListener('click', modo_multijugador)
+    sectionMapa.style.display="none"
+    sectionCombate.style.display="none"
     personajesSeleccionables()
     personaje_Seleccionado.addEventListener('click',seleccionPersonaje)
 }
@@ -148,6 +156,8 @@ function seleccionPersonaje(){
     vidaEnemigo=personajeEnemigo.vida
     actualizarVida()
     extraerAtaques(personajeJugador)
+    sectionSeleccionPersonaje.style.display="none"
+    sectionCombate.style.display="flex"
     //console.log(extraerAtaques(personajeJugador))
 
 }
