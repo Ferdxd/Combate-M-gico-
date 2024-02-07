@@ -22,6 +22,10 @@ let defensasJugador=[]
 let ataquesEnemigo=[]
 let defensasEnemigo=[]
 let secuenciaAtaquesJugador=[]
+let ataqueJugador
+let ataqueEnemigo
+let proteccionJugador
+let proteccionEnemigo
 
 
 //section personajes
@@ -205,9 +209,8 @@ function seleccionPersonajeJugador(id){
 
 
 function seleccionEnemigo(){
-    let personajeElegido=aleatorio(0,personajes.length-1)
-    personajeEnemigo=personajes[personajeElegido]
-   console.log(personajeEnemigo.nombre)
+   let personajeElegido=aleatorio(0,personajes.length-1)
+   personajeEnemigo=personajes[personajeElegido]
    nombreEnemigo.innerHTML= personajeEnemigo.nombre
    extraerAtaquesEnemigo(personajeEnemigo)
    
@@ -230,12 +233,12 @@ function extraerAtaques(personajeJugador){
     defensasJugador=personajeJugador.defensas
     
     mostrarSkills(ataquesJugador,'boton-ataques',divContenedorAtaques)
-        
+    mostrarSkills(defensasJugador,'boton-ataques',divContenedorDefensas) 
     btnAtaque1=document.getElementById(ataquesJugador[0].nombre)
     btnAtaque2=document.getElementById(ataquesJugador[1].nombre)
     btnAtaque3=document.getElementById(ataquesJugador[2].nombre)
     botonesAtaques=document.querySelectorAll('.boton-ataques')
-    //mostrarSkills(defensasJugador,'boton-defensas',divContenedorDefensas)
+    
 
     secuenciaCombate()
 
@@ -245,21 +248,29 @@ function extraerAtaques(personajeJugador){
 }
 
 
+
 function secuenciaCombate(){
     botonesAtaques.forEach((boton)=>{
         boton.addEventListener('click',(e)=>{
             ataquesJugador.forEach((ataque)=>{
                 if(e.target.textContent==ataque.nombre){
-                    secuenciaAtaquesJugador.push(ataque.nombre)
-                    lanzarAtaque(ataque)
-                    lanzarAtaqueEnemigo()
+                    ataqueJugador=ataque
+                    lanzarAtaque()
+                    reaccionAleatoriaEnemigo()
+                    actualizarVida()
                     boton.style.background='white'
                     boton.disabled=true
-                }
+                }      
             })
-            if(secuenciaAtaquesJugador.length==3){
-                alert("ya has presionado todos los botones")
-            }
+            defensasJugador.forEach((defensa)=>{
+                if(e.target.textContent==defensa.nombre){
+                proteccionJugador=defensa
+                activarDefensaJugador()
+                actualizarVida()
+                boton.style.background='white'
+                boton.disabled=true
+                }
+                    })
         })
     })
     
@@ -270,26 +281,93 @@ function actualizarVida(){
     vidasJugador.innerHTML="vida "+vidaJugador
 }
 
-function lanzarAtaque(ataqueLanzado){
-    console.log(personajeJugador.nombre+ " Lanza "+ataqueLanzado.nombre+" contra:"+personajeEnemigo.nombre+" e inflige "+ataqueLanzado.damage+ " de daño")
-    vidaEnemigo-=ataqueLanzado.damage
-    console.log("vida "+vidaEnemigo)
-    actualizarVida()
+function lanzarAtaque(){
+    console.log(personajeJugador.nombre+ " Lanza "+ataqueJugador.nombre+" contra:"+personajeEnemigo.nombre+" e inflige "+ataqueJugador.damage+ " de daño")
+    vidaEnemigo-=ataqueJugador.damage
+   // console.log("vida "+vidaEnemigo)
+}
+
+function activarDefensaJugador(){
+    let reduccionFinal
+    let dañoFinal
+    ataqueEnemigo=null
+    proteccionEnemigo=null
+    console.log(personajeJugador.nombre+" Ha Utilizado Hechizo De Defensa "+proteccionJugador.nombre)
+    reaccionAleatoriaEnemigo()
+    if(proteccionEnemigo==null){
+        if(ataqueEnemigo.nombre==proteccionJugador.nombre){
+            reduccionFinal=(proteccionJugador.reduccionDaño+proteccionJugador.reduccionExtra)
+            vidaJugador+=reduccionFinal
+            dañoFinal=(ataqueEnemigo.damage-reduccionFinal)
+            console.log(proteccionJugador.nombre+" Es Fuerte Contra "+ataqueEnemigo.nombre+ " Por lo tanto se reduce el daño se reduce a "+dañoFinal)
+        }else{
+            reduccionFinal=proteccionJugador.reduccionDaño
+            vidaJugador+=reduccionFinal
+            dañoFinal=(ataqueEnemigo.damage-reduccionFinal)  
+            console.log(proteccionJugador.nombre+ " Reduce el daño de "+ataqueEnemigo.nombre+" a "+ dañoFinal)
+        }
+    }else{
+        console.log("ambos lanzaron hechizos de proteccion")
+    }
+   
+}
+
+function reaccionAleatoriaEnemigo(){
+      let tipoAtaque=aleatorio(1,2)
+      tipoAtaque=2
+      if(tipoAtaque==1){
+        lanzarAtaqueEnemigo()
+      }else{
+        activarDefensaEnemigo()
+      }
 }
 function lanzarAtaqueEnemigo(){
-    if(ataquesEnemigo.length!=null){
-        let ataqueAleatorio = aleatorio(0,ataquesEnemigo.length-1)
-        console.log(personajeEnemigo.nombre+" Lanza "+ataquesEnemigo[ataqueAleatorio].nombre+ " contra:"+ personajeJugador.nombre+" e inflige "+ataquesEnemigo[ataqueAleatorio].damage+ " de daño")
-        vidaJugador-=ataquesEnemigo[ataqueAleatorio].damage
-        actualizarVida()
-        console.log(ataquesEnemigo.splice(ataqueAleatorio,1))
-        console.log(ataquesEnemigo)
-        console.log("vida "+vidaJugador)
-    }else{
-        console.log("Ya no hay mas ataques enemigos")
-    }
-    
+        if(ataquesEnemigo.length!=0){
+                let ataqueAleatorio = aleatorio(0,ataquesEnemigo.length-1)
+                ataqueEnemigo=ataquesEnemigo[ataqueAleatorio]
+                console.log(personajeEnemigo.nombre+" Lanza "+ataqueEnemigo.nombre+ " contra:"+ personajeJugador.nombre+" e inflige "+ataqueEnemigo.damage+ " de daño")
+                vidaJugador-=ataqueEnemigo.damage
+               // actualizarVida()
+                console.log(ataquesEnemigo.splice(ataqueAleatorio,1))
+                console.log(ataquesEnemigo)
+           
+          
+        }else{
+            activarDefensaEnemigo()
+        }  
+        
 }
+
+function activarDefensaEnemigo(){
+    if(defensasEnemigo.length!=0){
+        if(ataqueJugador!=null){
+            let defensaAleatoria=aleatorio(0,defensasEnemigo.length-1);
+            proteccionEnemigo=defensasEnemigo[defensaAleatoria]
+            let dañoFinal
+            let reduccionFinal
+            console.log(personajeEnemigo.nombre+" Utiliza Hechizo De Defensa: "+proteccionEnemigo.nombre)
+            if(ataqueJugador.nombre==proteccionEnemigo.fortaleza){
+                reduccionFinal=(proteccionEnemigo.reduccionDaño+proteccionEnemigo.reduccionExtra)
+                vidaEnemigo+=reduccionFinal
+                dañoFinal=(ataqueJugador.damage-reduccionFinal)
+                console.log(proteccionEnemigo.nombre+ " Es Fuerte Contra "+ataqueJugador.nombre+" Por lo tanto el daño se reduce a "+ dañoFinal)
+            }else{
+                reduccionFinal=proteccionEnemigo.reduccionDaño
+                vidaEnemigo+=reduccionFinal
+                dañoFinal=(ataqueJugador.damage-reduccionFinal)
+                console.log(proteccionEnemigo.nombre+ " Reduce el daño de "+ataqueJugador.nombre+" a "+ dañoFinal)
+            }
+            defensasEnemigo.splice(defensaAleatoria,1)
+        }else{
+            console.log("2 hechizos de defensa no se hacen ningun danio")
+        }
+      
+    }else{
+        lanzarAtaqueEnemigo()
+    }
+}
+
+
 
 
 
