@@ -62,9 +62,9 @@ class Personaje{
 
 //creacion de personajes jugables
 
-let harryPotter=new Personaje('Harry Potter', './assets/harry_potter.png',10,'harry')
-let ronWeasley=new Personaje('Ron Weasley','./assets/Ron_Weasley.png',10,'ron')
-let hermioneGranger=new Personaje('Hermione Granger','./assets/Hermione_Granger.png',10,'hermione')
+let harryPotter=new Personaje('Harry Potter', './assets/harry_potter.png',100,'harry')
+let ronWeasley=new Personaje('Ron Weasley','./assets/Ron_Weasley.png',100,'ron')
+let hermioneGranger=new Personaje('Hermione Granger','./assets/Hermione_Granger.png',100,'hermione')
 
 //ataques disponibles
 // <p>Expelliarmus, Stupefy, Reducto</p>
@@ -76,18 +76,18 @@ let btnAtaque2
 let btnAtaque3
 let botonesAtaques=[]
 //botones Defensas
-let btnProtego
-let btnEscudoMagico
+let btnDefensa1
+let btnDefensa2
 
 const ataquesTipoDaño=[
-    {nombre:'Expelliarmus', descripcion:'Desarma al oponente y causa daño moderado', damage:3},
-    {nombre:'Stupefy',descripcion:'Aturde al oponente y causa daño leve', damage:2},
-    {nombre:'Reducto',descripcion:'Causa daño significativo al oponente', damage:4}
+    {nombre:'Expelliarmus', descripcion:'Desarma al oponente y causa daño moderado', damage:30},
+    {nombre:'Stupefy',descripcion:'Aturde al oponente y causa daño leve', damage:20},
+    {nombre:'Reducto',descripcion:'Causa daño significativo al oponente', damage:40}
 ]
 
 const hechizosDefensa=[
-    {nombre:'Protego',descripcion:'Reduce el daño recibido'},
-    {nombre:'Escudo Magico',descripcion:'Absorbe una cantidad fija de daño.'}
+    {nombre:'Protego',descripcion:'Reduce el daño recibido',reduccion:10, fortaleza:'Stupefy', reduccionExtra:5},
+    {nombre:'Escudo Magico',descripcion:'Absorbe una cantidad fija de daño.',reduccion:20, fortaleza:'Reducto',reduccionExtra:10}
 ]
 
 harryPotter.ataques.push(...ataquesTipoDaño)
@@ -196,8 +196,6 @@ function extraerAtaquesEnemigo(personajeEnemigo){
  //   ataquesEnemigo.pop()
   //  console.log(ataquesEnemigo.splice(0,1))
     console.log(ataquesEnemigo)
-    
-   
 }
 
 
