@@ -60,6 +60,39 @@ class Personaje{
     }
 }
 
+class Hechizo{
+    constructor(nombre, descripcion){
+        this.nombre=nombre
+        this.descripcion=descripcion
+    }
+}
+
+class HechizoAtaque extends Hechizo{
+    constructor(nombre,descripcion,damage){
+        super(nombre,descripcion)
+        this.damage=damage
+
+    }
+}
+
+class HechizoDefensa extends Hechizo{
+    constructor(nombre, descripcion, reduccionDaño, fortaleza, reduccionExtra){
+        super(nombre, descripcion)
+        this.reduccionDaño=reduccionDaño
+        this.fortaleza=fortaleza
+        this.reduccionExtra=reduccionExtra
+    }
+}
+
+//hechizosAtaque 
+const expelliarmus=new HechizoAtaque('Expelliarmus','Desarma al oponente y causa daño moderado',30)
+const stupefy=new HechizoAtaque('Stupefy','Aturde al oponente y causa daño leve',20)
+const reducto=new HechizoAtaque('Reducto','Causa daño significativo al oponente',40)
+
+//hechizosDefensa
+const protego=new HechizoDefensa('Protego','Reduce el daño recibido',10, 'Stupefy', 5)
+const escudoMagico=new HechizoDefensa('Escudo Magico','Absorbe una cantidad fija de daño.',20, 'Reducto',10)
+
 //creacion de personajes jugables
 
 let harryPotter=new Personaje('Harry Potter', './assets/harry_potter.png',100,'harry')
@@ -79,25 +112,16 @@ let botonesAtaques=[]
 let btnDefensa1
 let btnDefensa2
 
-const ataquesTipoDaño=[
-    {nombre:'Expelliarmus', descripcion:'Desarma al oponente y causa daño moderado', damage:30},
-    {nombre:'Stupefy',descripcion:'Aturde al oponente y causa daño leve', damage:20},
-    {nombre:'Reducto',descripcion:'Causa daño significativo al oponente', damage:40}
-]
 
-const hechizosDefensa=[
-    {nombre:'Protego',descripcion:'Reduce el daño recibido',reduccion:10, fortaleza:'Stupefy', reduccionExtra:5},
-    {nombre:'Escudo Magico',descripcion:'Absorbe una cantidad fija de daño.',reduccion:20, fortaleza:'Reducto',reduccionExtra:10}
-]
+harryPotter.ataques.push(expelliarmus,stupefy,reducto)
+harryPotter.defensas.push(protego,escudoMagico)
 
-harryPotter.ataques.push(...ataquesTipoDaño)
-harryPotter.defensas.push(...hechizosDefensa)
+hermioneGranger.ataques.push(expelliarmus,stupefy,reducto)
+hermioneGranger.defensas.push(protego,escudoMagico)
 
-hermioneGranger.ataques.push(...ataquesTipoDaño)
-hermioneGranger.defensas.push(...hechizosDefensa)
-
-ronWeasley.ataques.push(...ataquesTipoDaño)
-ronWeasley.defensas.push(...hechizosDefensa)
+//ronWeasley.ataques.push(...ataquesTipoDaño)
+ronWeasley.ataques.push(expelliarmus,stupefy,reducto)
+ronWeasley.defensas.push(protego,escudoMagico)
 
 personajes.push(harryPotter,ronWeasley,hermioneGranger)
 
@@ -118,6 +142,7 @@ function personajesSeleccionables(){
 
 //funcion principal
 function main(){
+    
     sectionMenuPrincipal.style.display="none"
     btn_1jugador.addEventListener('click', modo_unJugador)
     btn_multijugador.addEventListener('click', modo_multijugador)
