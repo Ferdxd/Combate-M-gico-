@@ -6,6 +6,11 @@ const sectionMenuPrincipal=document.getElementById('menu-principal')
 const btn_1jugador=document.getElementById('btn_unJugador')
 const btn_multijugador=document.getElementById('btn_multijugador')
 
+const barraVida = document.getElementById('vida-player')
+const spanVida = document.querySelector('.barra-vida span')
+const barraVidaEnemigo=document.getElementById('vida-enemy')
+const spanVidasEnemigo=document.querySelector('.barra-vida-enemigo span')
+
 
 //personajes jugables
 const sectionSeleccionPersonaje=document.getElementById('seleccionar-personaje')
@@ -287,6 +292,7 @@ function secuenciaCombate(){
 function actualizarVida(){
     vidasEnemigo.innerHTML="vida "+vidaEnemigo
     vidasJugador.innerHTML="vida "+vidaJugador
+    actualizarVidaBarra(vidaJugador,vidaEnemigo)
 }
 
 function lanzarAtaque(){
@@ -395,6 +401,13 @@ function activarDefensaEnemigo(){
     }
 }
 
+
+function actualizarVidaBarra(vidaJugadorx,vida_enemigoy) {
+    barraVida.value = vidaJugadorx;
+    spanVida.textContent = vidaJugadorx + '%';
+    barraVidaEnemigo.value= vida_enemigoy;
+    spanVidasEnemigo.textContent=vida_enemigoy+ '%';
+  }
 
 
 
