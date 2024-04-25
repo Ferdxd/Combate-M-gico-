@@ -11,6 +11,9 @@ const spanVida = document.querySelector('.barra-vida span')
 const barraVidaEnemigo=document.getElementById('vida-enemy')
 const spanVidasEnemigo=document.querySelector('.barra-vida-enemigo span')
 
+const infoAtaqueJugador=document.querySelector('.info-ataque-jugador span')
+const infoAtaqueEnemigo=document.querySelector('.info-ataque-enemigo span')
+
 
 //personajes jugables
 const sectionSeleccionPersonaje=document.getElementById('seleccionar-personaje')
@@ -31,6 +34,8 @@ let ataqueJugador
 let ataqueEnemigo
 let proteccionJugador
 let proteccionEnemigo
+let ataquesContador=0
+
 
 
 //section personajes
@@ -140,20 +145,7 @@ ronWeasley.defensas.push(protego,escudoMagico)
 
 personajes.push(harryPotter,ronWeasley,hermioneGranger)
 
-function personajesSeleccionables(){
-    let opcionPersonajes=null;
-    personajes.forEach((personaje)=>{
-        opcionPersonajes=`<input type="radio" id=${personaje.id} name="personaje"/>
-        <label class="tarjeta-personaje" for=${personaje.id}>
-        <img src=${personaje.foto} alt=${personaje.id} />
-        <p>${personaje.nombre}</p>
-        </label>`
-        divContenedorPersonajes.innerHTML+=opcionPersonajes
-    })
-    rbtn_hermione=document.getElementById('hermione')
-    rbtn_harry=document.getElementById('harry')
-    rbtn_ron=document.getElementById('ron')
-}
+
 
 //funcion principal
 function main(){
@@ -167,6 +159,8 @@ function main(){
     personaje_Seleccionado.addEventListener('click',seleccionPersonaje)
 }
 
+
+
 //funciones de botones
 function modo_unJugador(){
     alert("Seleccionaste el modo de un jugador")
@@ -174,6 +168,21 @@ function modo_unJugador(){
 
 function modo_multijugador(){
     alert("Seleccionaste el modo multijugador")
+}
+
+function personajesSeleccionables(){
+    let opcionPersonajes=null;
+    personajes.forEach((personaje)=>{
+        opcionPersonajes=`<input type="radio" id=${personaje.id} name="personaje"/>
+        <label class="tarjeta-personaje" for=${personaje.id}>
+        <img src=${personaje.foto} alt=${personaje.id} />
+        <p>${personaje.nombre}</p>
+        </label>`
+        divContenedorPersonajes.innerHTML+=opcionPersonajes
+    })
+    rbtn_hermione=document.getElementById('hermione')
+    rbtn_harry=document.getElementById('harry')
+    rbtn_ron=document.getElementById('ron')
 }
 
 function seleccionPersonaje(){
@@ -218,7 +227,6 @@ function seleccionPersonajeJugador(id){
 }
 
 
-
 function seleccionEnemigo(){
    let personajeElegido=aleatorio(0,personajes.length-1)
    personajeEnemigo=personajes[personajeElegido]
@@ -237,7 +245,6 @@ function extraerAtaquesEnemigo(personajeEnemigo){
   //  console.log(ataquesEnemigo.splice(0,1))
     console.log(ataquesEnemigo)
 }
-
 
 
 function extraerAtaques(personajeJugador){
@@ -266,139 +273,162 @@ function secuenciaCombate(){
         boton.addEventListener('click',(e)=>{
             ataquesJugador.forEach((ataque)=>{
                 if(e.target.textContent==ataque.nombre){
+                    proteccionJugador=null
                     ataqueJugador=ataque
-                    lanzarAtaque()
-                    reaccionAleatoriaEnemigo()
-                    actualizarVida()
+                    lanzarAtaque(ataqueJugador)
+                    reaccionEnemigo()
                     boton.style.background='white'
                     boton.disabled=true
+                    ataquesContador++
                 }      
             })
             defensasJugador.forEach((defensa)=>{
                 if(e.target.textContent==defensa.nombre){
-                proteccionJugador=defensa
                 ataqueJugador=null
-                activarDefensaJugador()
-                actualizarVida()
+                proteccionJugador=defensa
+                activarDefensa(proteccionJugador)
+                reaccionEnemigo();
                 boton.style.background='white'
                 boton.disabled=true
+                ataquesContador++
                 }
-                    })
+                    }
+                )
+                if(ataquesContador==5){
+                    Ganador()
+                }
         })
     })
     
 }
 
+function lanzarAtaque(x){
+    infoAtaqueJugador.textContent="Nombre: "+x.nombre + "\n\n"
+    //caracteristicas del ataque
+    infoAtaqueJugador.textContent+="Descripción: "+ x.descripcion+ "\n\n"
+    infoAtaqueJugador.textContent+="Daño del hechizo: "+ x.damage
+}
+
+function activarDefensa(x){
+    infoAtaqueJugador.textContent="Nombre: "+x.nombre+ "\n"
+    //caracteristicas del ataque
+    infoAtaqueJugador.textContent+="Descripción: "+ x.descripcion + "\n"
+    //reduccion de damage
+    infoAtaqueJugador.textContent+="Reduccion de daño: "+ x.reduccionDaño+ "\n"
+    //si es fuerte contra un hechizo se le aplicara una bonificacion y reducira mas el damage
+    infoAtaqueJugador.textContent+="Fuerte contra: "+ x.fortaleza+ "\n"
+    infoAtaqueJugador.textContent+="Reduccion extra: "+x.reduccionExtra
+}
+
+function reaccionEnemigo(){
+    let tipoAtaque=aleatorio(1,2)
+   
+    if(tipoAtaque==1){
+        if(ataquesEnemigo!=null){
+            lanzarAtaqueEnemigo()
+        }else{
+            //no hay ataques disponibles
+            activarDefensaEnemigo()
+        }
+        
+    }else if(tipoAtaque==2){
+        if(defensasEnemigo!=null){
+            activarDefensaEnemigo()
+        }else{
+            lanzarAtaqueEnemigo()
+            //no hay defensas disponibles
+        }
+        
+    }
+}
+
+function lanzarAtaqueEnemigo(){
+    proteccionEnemigo=null
+    let ataqueAleatorio=aleatorio(0,ataquesEnemigo.length-1)
+    console.log(ataqueAleatorio)
+    infoAtaqueEnemigo.textContent="Nombre: "+ ataquesEnemigo[ataqueAleatorio].nombre+"\n"
+    infoAtaqueEnemigo.textContent+="Descripcion: "+ataquesEnemigo[ataqueAleatorio].descripcion+"\n"
+    infoAtaqueEnemigo.textContent+="Daño de hechizo: "+ataquesEnemigo[ataqueAleatorio].damage+"\n"
+
+    ataqueEnemigo=ataquesEnemigo[ataqueAleatorio]
+   
+    ataquesEnemigo.splice(ataqueAleatorio,1)
+    
+    console.log(ataquesEnemigo)
+    choqueAtaques()
+   
+}
+
+function activarDefensaEnemigo(){
+    ataqueEnemigo=null
+    let defensaAleatoria
+    if(defensasEnemigo.length>0){
+        defensaAleatoria=aleatorio(0,defensasEnemigo.length-1)
+    }else{
+        defensaAleatoria=0
+    }
+    
+    console.log(defensasEnemigo)
+    infoAtaqueEnemigo.textContent="Nombre: "+ defensasEnemigo[defensaAleatoria].nombre+"\n"
+    infoAtaqueEnemigo.textContent+="Descripcion: "+defensasEnemigo[defensaAleatoria].descripcion+"\n"
+    infoAtaqueEnemigo.textContent+="Reduccion de daño: "+defensasEnemigo[defensaAleatoria].reduccionDaño+"\n"
+    infoAtaqueEnemigo.textContent+="Fuerte contra: "+defensasEnemigo[defensaAleatoria].fortaleza+"\n"
+    infoAtaqueEnemigo.textContent+="Reduccion Extra: "+defensasEnemigo[defensaAleatoria].reduccionExtra+"\n"
+
+    proteccionEnemigo=defensasEnemigo[defensaAleatoria]
+
+    defensasEnemigo.splice(defensaAleatoria,1)
+
+    choqueAtaques()
+
+}
+
+function choqueAtaques(){
+    let damageTotalJugador
+    let damageTotalEnemigo
+    if(ataqueJugador!=null && ataqueEnemigo!=null){
+        vidaEnemigo-=ataqueJugador.damage
+        vidaJugador-=ataqueEnemigo.damage
+        mensajeEnemigo.textContent="Ha infligido "+ataqueEnemigo.damage+ " de daño a "+ personajeJugador.nombre
+        mensajeJugador.textContent="Ha infligido "+ataqueJugador.damage+ " de daño a "+ personajeEnemigo.nombre
+        resultadoFinal.textContent="Ambos reciben daño"
+        actualizarVida()
+    }
+    else if(ataqueJugador!=null && proteccionEnemigo!=null){
+        if(proteccionEnemigo.fortaleza==ataqueJugador.nombre){
+            damageTotalJugador=ataqueJugador.damage-(proteccionEnemigo.reduccionDaño+proteccionEnemigo.reduccionExtra)
+            vidaEnemigo-=damageTotalJugador
+        }else{
+            damageTotalJugador=ataqueJugador.damage-proteccionEnemigo.reduccionDaño
+            vidaEnemigo-=damageTotalJugador
+        }
+        actualizarVida()
+        mensajeJugador.textContent="Ha infligido "+damageTotalJugador+ " de daño a "+ personajeEnemigo.nombre
+        mensajeEnemigo.textContent="Ha reducido el daño "
+    }
+    else if(proteccionJugador!=null && ataqueEnemigo!=null){
+        if(proteccionJugador.fortaleza==ataqueEnemigo.nombre){
+            damageTotalEnemigo=ataqueEnemigo.damage-(proteccionJugador.reduccionDaño+proteccionJugador.reduccionExtra)
+            vidaJugador-=damageTotalEnemigo
+        }else{
+            damageTotalEnemigo=ataqueEnemigo.damage-proteccionJugador.reduccionDaño
+            vidaJugador-=damageTotalEnemigo
+        }
+        actualizarVida()
+        mensajeEnemigo.textContent="Ha infligido "+damageTotalEnemigo+ " de daño a "+ personajeJugador.nombre
+        mensajeJugador.textContent="Ha reducido el daño "
+    }else if(proteccionEnemigo!=null && proteccionEnemigo!=null){
+        mensajeJugador.textContent="Ha utilizado Hechizo de defensa"
+        mensajeEnemigo.textContent="Ha utilizado Hechizo de defensa"
+        resultadoFinal.textContent="Ambos utilizaron Hechizo de defensa"
+    }
+}
+
+
 function actualizarVida(){
     vidasEnemigo.innerHTML="vida "+vidaEnemigo
     vidasJugador.innerHTML="vida "+vidaJugador
     actualizarVidaBarra(vidaJugador,vidaEnemigo)
-}
-
-function lanzarAtaque(){
-    //console.log(personajeJugador.nombre+ " Lanza "+ataqueJugador.nombre+" contra:"+personajeEnemigo.nombre+" e inflige "+ataqueJugador.damage+ " de daño")
-    resultadoFinal.innerHTML="Resultado"
-    mensajeJugador.innerHTML= personajeJugador.nombre+ " Lanza "+ataqueJugador.nombre+" contra:"+personajeEnemigo.nombre+" e inflige "+ataqueJugador.damage+ " de daño"
-    vidaEnemigo-=ataqueJugador.damage
-   // console.log("vida "+vidaEnemigo)
-}
-
-function activarDefensaJugador(){
-    resultadoFinal.innerHTML="Resultado"
-    let reduccionFinal
-    let dañoFinal
-    ataqueEnemigo=null
-    proteccionEnemigo=null
-    mensajeJugador.innerHTML=personajeJugador.nombre+" Ha Utilizado Hechizo De Defensa "+proteccionJugador.nombre
-    reaccionAleatoriaEnemigo()
-    if(proteccionEnemigo==null){
-        if(ataqueEnemigo!=null){
-            if(ataqueEnemigo.nombre==proteccionJugador.fortaleza){
-                reduccionFinal=(proteccionJugador.reduccionDaño+proteccionJugador.reduccionExtra)
-                vidaJugador+=reduccionFinal
-                dañoFinal=(ataqueEnemigo.damage-reduccionFinal)
-                //console.log(proteccionJugador.nombre+" Es Fuerte Contra "+ataqueEnemigo.nombre+ " Por lo tanto se reduce el daño se reduce a "+dañoFinal)
-                mensajeJugador.innerHTML=proteccionJugador.nombre+" Es Fuerte Contra "+ataqueEnemigo.nombre+ " Por lo tanto se reduce el daño se reduce a "+dañoFinal
-            }else{
-                reduccionFinal=proteccionJugador.reduccionDaño
-                vidaJugador+=reduccionFinal
-                dañoFinal=(ataqueEnemigo.damage-reduccionFinal)  
-                //console.log(proteccionJugador.nombre+ " Reduce el daño de "+ataqueEnemigo.nombre+" a "+ dañoFinal)
-                mensajeJugador.innerHTML=proteccionJugador.nombre+ " Reduce el daño de "+ataqueEnemigo.nombre+" a "+ dañoFinal
-            }
-        }
-      
-    }else{
-        console.log("ambos lanzaron hechizos de proteccion")
-    }
-   
-}
-
-function reaccionAleatoriaEnemigo(){
-      let tipoAtaque=aleatorio(1,2)
-      tipoAtaque=2
-      if(tipoAtaque==1){
-        lanzarAtaqueEnemigo()
-      }else{
-        activarDefensaEnemigo()
-      }
-}
-function lanzarAtaqueEnemigo(){
-        if(ataquesEnemigo.length!=0){
-            let ataqueAleatorio = aleatorio(0,ataquesEnemigo.length-1)
-
-            if(ataqueJugador!=null){
-               
-                ataqueEnemigo=ataquesEnemigo[ataqueAleatorio]
-                //console.log(personajeEnemigo.nombre+" Lanza "+ataqueEnemigo.nombre+ " contra:"+ personajeJugador.nombre+" e inflige "+ataqueEnemigo.damage+ " de daño")
-                mensajeEnemigo.innerHTML= personajeEnemigo.nombre+" Lanza "+ataqueEnemigo.nombre+ " contra:"+ personajeJugador.nombre+" e inflige "+ataqueEnemigo.damage+ " de daño"
-                vidaJugador-=ataqueEnemigo.damage
-               // actualizarVida()
-                console.log(ataquesEnemigo.splice(ataqueAleatorio,1))
-                console.log(ataquesEnemigo)
-                
-            }else{
-                console.log(ataquesEnemigo.splice(ataqueAleatorio,1))
-            }
-           
-          
-        }else{
-            activarDefensaEnemigo()
-        }  
-        
-}
-
-function activarDefensaEnemigo(){
-    if(defensasEnemigo.length!=0){
-        let defensaAleatoria=aleatorio(0,defensasEnemigo.length-1);
-        if(ataqueJugador!=null){
-            proteccionEnemigo=defensasEnemigo[defensaAleatoria]
-            let dañoFinal
-            let reduccionFinal
-            mensajeEnemigo.innerHTML=personajeEnemigo.nombre+" Utiliza Hechizo De Defensa: "+proteccionEnemigo.nombre
-            if(ataqueJugador.nombre==proteccionEnemigo.fortaleza){
-                reduccionFinal=(proteccionEnemigo.reduccionDaño+proteccionEnemigo.reduccionExtra)
-                vidaEnemigo+=reduccionFinal
-                dañoFinal=(ataqueJugador.damage-reduccionFinal)
-                resultadoFinal.innerHTML=proteccionEnemigo.nombre+ " Es Fuerte Contra "+ataqueJugador.nombre+" Por lo tanto el daño se reduce a "+ dañoFinal
-            }else{
-                reduccionFinal=proteccionEnemigo.reduccionDaño
-                vidaEnemigo+=reduccionFinal
-                dañoFinal=(ataqueJugador.damage-reduccionFinal)
-                resultadoFinal.innerHTML=proteccionEnemigo.nombre+ " Reduce el daño de "+ataqueJugador.nombre+" a "+ dañoFinal
-            }
-            console.log(defensasEnemigo.splice(defensaAleatoria,1))
-        }else{
-            proteccionEnemigo=defensasEnemigo[defensaAleatoria]
-            mensajeEnemigo.innerHTML=personajeEnemigo.nombre+" Utiliza Hechizo De Defensa: "+proteccionEnemigo.nombre
-            resultadoFinal.innerHTML="2 hechizos de defensa no se hacen ningun daño"
-            console.log(defensasEnemigo.splice(defensaAleatoria,1))
-            proteccionEnemigo=null
-        }
-      
-    }else{
-        lanzarAtaqueEnemigo()
-    }
 }
 
 
@@ -410,7 +440,13 @@ function actualizarVidaBarra(vidaJugadorx,vida_enemigoy) {
   }
 
 
-
+function Ganador(){
+    if(vidaJugador>vidaEnemigo){
+        alert("Has Ganado")
+    }else{
+        alert("Has Perdido")
+    }
+}
 
 
 function mostrarSkills(skills,claseboton,divs){
